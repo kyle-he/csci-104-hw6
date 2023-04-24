@@ -5,6 +5,12 @@
 #include <cmath>
 #include <random>
 #include <chrono>
+#include <ctype.h>
+#include <vector>
+
+#include <ctime>
+#include <cstdlib>
+#include <cctype>
 
 typedef std::size_t HASH_INDEX_T;
 
@@ -19,16 +25,55 @@ struct MyStringHash {
     // hash function entry point (i.e. this is h(k))
     HASH_INDEX_T operator()(const std::string& k) const
     {
-        // Add your code here
+        int a_index = (6 - (k.length() % 6)) % 6;
+        int curr_sum = 0;
 
+        std::vector<int> w;
 
+        for (size_t i = 0; i < k.length(); i++) {
+            int curr_char = letterDigitToNumber(k[i]);
+            curr_sum = 36 * curr_sum + curr_char;
+
+            std::cout << "currsum: " << curr_sum << "/ currchar: " << curr_char << std::endl;
+
+            a_index++;
+
+            if (a_index > 5) {
+                w.push_back(curr_sum);
+                // w[w_index] = curr_sum;
+                // w_index++;
+
+                curr_sum = 0;   
+                a_index = 0;
+            }
+        }
+
+        while (w.size() < 5) {
+            w.insert(w.begin(), 0);
+        }
+
+        for (auto i : w) {
+            std::cout << "w: " << i << std::endl;
+        }
+
+        HASH_INDEX_T final = 0;
+        for (int i = 0; i < 5; i++) {
+            final += w[i] * rValues[i];
+        }
+
+        return final;
     }
 
     // A likely helper function is to convert a-z,0-9 to an integral value 0-35
     HASH_INDEX_T letterDigitToNumber(char letter) const
     {
-        // Add code here or delete this helper function if you do not want it
-
+        if (toascii(letter) >= 97 && toascii(letter) <= 122) {
+            return toascii(letter)-97;
+        } else if (toascii(letter) >= 65 && toascii(letter) <= 90) {
+            return toascii(letter)-65;
+        } else {
+            return toascii(letter)-22;
+        }
     }
 
     // Code to generate the random R values
