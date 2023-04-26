@@ -101,10 +101,9 @@ bool boggleHelper(const std::set<std::string>& dict, const std::set<std::string>
 			return false;
 		}
 
-		bool terminal_word = dict.find(word) != dict.end();
 		bool foundLongerWord = boggleHelper(dict, prefix, board, word, result, r + dr, c + dc, dr, dc);
 
-		if(terminal_word && !foundLongerWord) {
+		if(dict.find(word) != dict.end() && !foundLongerWord) {
 			result.insert(word);
 			return true;
 		}
