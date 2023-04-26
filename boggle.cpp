@@ -92,24 +92,27 @@ std::set<std::string> boggle(const std::set<std::string>& dict, const std::set<s
 }
 
 bool boggleHelper(const std::set<std::string>& dict, const std::set<std::string>& prefix, const std::vector<std::vector<char> >& board,
-                                   std::string word, std::set<std::string>& result, unsigned int r, unsigned int c, int dr, int dc)
+                  std::string word, std::set<std::string>& result, unsigned int r, unsigned int c, int dr, int dc)
 {
-	if(!(r >= board.size() || c >= board[0].size())) {
-		word += board[r][c];
+    if (r < 0 || r >= board.size() || c < 0 || c >= board.size()) {
+        return false;
+    }
 
-		if(prefix.find(word) == prefix.end()){
-			return false;
-		}
+    word += board[r][c];
 
-		bool foundLongerWord = boggleHelper(dict, prefix, board, word, result, r + dr, c + dc, dr, dc);
+    if (prefix.find(word) == prefix.end()) {
+        return false;
+    }
 
-		if(dict.find(word) != dict.end() && !foundLongerWord) {
-			result.insert(word);
-			return true;
-		}
+    bool is_word = dict.find(word) != dict.end();
+    bool found_longer_word = boggleHelper(dict, prefix, board, word, result, r + dr, c + dc, dr, dc);
 
-		return foundLongerWord;
-	} else {
-		return true;
-	}
+    if (found_longer_word || ! is_word) {
+        return found_longer_word;
+    }
+
+    result.insert(word);
+	
+    return true;
 }
+
