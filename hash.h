@@ -26,16 +26,13 @@ struct MyStringHash {
     HASH_INDEX_T operator()(const std::string& k) const
     {
         int a_index = (6 - (k.length() % 6)) % 6;
-        int curr_sum = 0;
+        long long curr_sum = 0;
 
-        std::vector<int> w;
+        std::vector<long long> w;
 
         for (size_t i = 0; i < k.length(); i++) {
             int curr_char = letterDigitToNumber(k[i]);
             curr_sum = 36 * curr_sum + curr_char;
-
-            std::cout << "currsum: " << curr_sum << "/ currchar: " << curr_char << std::endl;
-
             a_index++;
 
             if (a_index > 5) {
@@ -52,11 +49,7 @@ struct MyStringHash {
             w.insert(w.begin(), 0);
         }
 
-        for (auto i : w) {
-            std::cout << "w: " << i << std::endl;
-        }
-
-        HASH_INDEX_T final = 0;
+        long long final = 0;
         for (int i = 0; i < 5; i++) {
             final += w[i] * rValues[i];
         }
